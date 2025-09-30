@@ -27,6 +27,16 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    otpCode: {
+        type: String
+    },
+    otpExpire: {
+        type: Date
+    },
     resetPasswordToken: {
         type: String
     },
@@ -51,6 +61,23 @@ userSchema.pre('save', async function(next) {
 // Method to check if password matches
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate OTP for email verification
+userSchema.methods.generateOTP = function() {
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Hash OTP and set to otpCode field
+    this.otpCode = crypto
+        .createHash('sha256')
+        .update(otp)
+        .digest('hex');
+    
+    // Set expire time (10 minutes)
+    this.otpExpire = Date.now() + 10 * 60 * 1000;
+    
+    return otp;
 };
 
 // Generate password reset token

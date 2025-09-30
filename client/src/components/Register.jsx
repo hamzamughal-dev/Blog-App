@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { authAPI } from '../services/api';
+import OTPVerification from './OTPVerification';
 
 const Register = ({ onAuthSuccess }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const Register = ({ onAuthSuccess }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const { username, email, password, confirmPassword } = formData;
 
@@ -36,8 +39,8 @@ const Register = ({ onAuthSuccess }) => {
       });
 
       if (res.data.success) {
-        localStorage.setItem('token', res.data.user.token);
-        onAuthSuccess();
+        setRegisteredEmail(email);
+        setShowOTPVerification(true);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -46,6 +49,30 @@ const Register = ({ onAuthSuccess }) => {
     }
   };
 
+  const handleVerificationSuccess = (message) => {
+    // Show success message briefly then proceed to dashboard
+    setTimeout(() => {
+      onAuthSuccess();
+    }, 1500);
+  };
+
+  const handleBackToRegister = () => {
+    setShowOTPVerification(false);
+    setRegisteredEmail('');
+    setError('');
+  };
+
+  // Show OTP verification if registration was successful
+  if (showOTPVerification) {
+    return (
+      <OTPVerification 
+        email={registeredEmail}
+        onVerificationSuccess={handleVerificationSuccess}
+        onBackToRegister={handleBackToRegister}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8">
@@ -53,6 +80,27 @@ const Register = ({ onAuthSuccess }) => {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            We'll send you a verification code to confirm your email
+          </p>
+          <div className="mt-4 flex justify-center">
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                <span className="ml-2">Register</span>
+              </div>
+              <div className="w-8 border-t border-gray-300"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                <span className="ml-2">Verify Email</span>
+              </div>
+              <div className="w-8 border-t border-gray-300"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                <span className="ml-2">Complete</span>
+              </div>
+            </div>
+          </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={onSubmit}>
           {error && (

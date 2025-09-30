@@ -15,6 +15,15 @@ exports.protect = async (req, res, next) => {
             // Get user from token
             req.user = await User.findById(decoded.id).select('-password');
 
+            // Check if user is verified
+            if (!req.user.isVerified) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Please verify your email before accessing this resource',
+                    needsVerification: true
+                });
+            }
+
             next();
         } catch (error) {
             res.status(401).json({

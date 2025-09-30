@@ -2,19 +2,18 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-    // Check if we're in development mode and email is not configured
-    if (process.env.NODE_ENV === 'development' && process.env.SMTP_USER === 'your-email@gmail.com') {
-        // For development, log email details instead of sending actual email
-        console.log('=== EMAIL SIMULATION (Configure SMTP to send real emails) ===');
-        console.log('To:', options.email);
-        console.log('Subject:', options.subject);
-        console.log('Message:', options.message);
-        console.log('===========================================================');
-        return;
-    }
+    console.log('📧 Attempting to send email to:', options.email);
+    console.log('📧 SMTP Config:', {
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        user: process.env.SMTP_USER,
+        hasPassword: !!process.env.SMTP_PASS
+    });
 
     try {
-        // Create transporter
+        console.log('📧 Creating transporter...');
+        
+        // Create transporter with more detailed configuration
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: Number(process.env.SMTP_PORT) || 587,
@@ -22,8 +21,17 @@ const sendEmail = async (options) => {
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
+            },
+            tls: {
+                rejectUnauthorized: false // For development only
             }
         });
+
+        console.log('📧 Verifying transporter...');
+        
+        // Verify transporter connection
+        await transporter.verify();
+        console.log('✅ Transporter verified successfully');
 
         // Email options
         const mailOptions = {
@@ -34,13 +42,28 @@ const sendEmail = async (options) => {
             html: options.html || options.message
         };
 
+        console.log('📧 Sending email...');
+        
         // Send email
         const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully:', info.messageId);
+        console.log('✅ Email sent successfully!');
+        console.log('📧 Message ID:', info.messageId);
+        
+        return info;
         
     } catch (error) {
-        console.error('Email sending failed:', error.message);
-        throw new Error('Email could not be sent');
+        console.error('❌ Email sending failed:');
+        console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
+        
+        // Detailed error logging for debugging
+        if (error.code === 'EAUTH') {
+            console.error('❌ Authentication failed - check SMTP_USER and SMTP_PASS');
+        } else if (error.code === 'ECONNECTION') {
+            console.error('❌ Connection failed - check SMTP_HOST and SMTP_PORT');
+        }
+        
+        throw new Error(`Email could not be sent: ${error.message}`);
     }
 };
 
