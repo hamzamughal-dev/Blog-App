@@ -4,6 +4,8 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Dashboard from './components/Dashboard'
 import Navbar from './components/Navbar'
+import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -51,6 +53,26 @@ function App() {
                 <Navigate to="/dashboard" replace />
               ) : (
                 <Register onAuthSuccess={handleAuthSuccess} />
+              )
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <ForgotPassword />
+              )
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <ResetPassword />
               )
             }
           />
