@@ -84,135 +84,127 @@ const OTPVerification = ({ email, onVerificationSuccess, onBackToRegister }) => 
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Verify Your Email
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            We've sent a 6-digit verification code to
-          </p>
-          <p className="text-center text-sm font-medium text-indigo-600">
-            {email}
-          </p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-          {/* Success Message */}
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-amber-50 backdrop-blur-3xl">
+      <div className="max-w-md w-full">
+        <div className="backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          {/* Compact Header */}
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-green-700 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              {success}
             </div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              {error}
-            </div>
-          )}
-          
-          <div>
-            <label htmlFor="otp" className="sr-only">
-              Verification Code
-            </label>
-            
-            {/* Individual OTP Input Boxes */}
-            <div className="flex justify-center space-x-3 mb-4">
-              {[0, 1, 2, 3, 4, 5].map((index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength="1"
-                  value={otp[index] || ''}
-                  onChange={(e) => {
-                    const newOtp = otp.split('');
-                    newOtp[index] = e.target.value.replace(/[^0-9]/g, '');
-                    const otpString = newOtp.join('').slice(0, 6);
-                    setOTP(otpString);
-                    
-                    // Auto-focus next input
-                    if (e.target.value && index < 5) {
-                      const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`);
-                      if (nextInput) nextInput.focus();
-                    }
-                    
-                    if (error) setError('');
-                  }}
-                  onKeyDown={(e) => {
-                    // Handle backspace
-                    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-                      const prevInput = document.querySelector(`input[name="otp-${index - 1}"]`);
-                      if (prevInput) prevInput.focus();
-                    }
-                  }}
-                  onPaste={handlePaste}
-                  name={`otp-${index}`}
-                  className="w-12 h-12 text-center border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none text-xl font-bold"
-                />
-              ))}
-            </div>
-            
-            {/* Fallback single input for mobile or accessibility */}
-            <input
-              id="otp"
-              name="otp"
-              type="text"
-              value={otp}
-              onChange={handleOTPChange}
-              onPaste={handlePaste}
-              className="md:hidden appearance-none relative block w-full px-3 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-lg text-center tracking-widest font-mono"
-              placeholder="Enter 6-digit code"
-              maxLength="6"
-              autoComplete="one-time-code"
-            />
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-800 to-green-700 bg-clip-text text-transparent mb-2">
+              📬 Verify Email
+            </h2>
+            <p className="text-sm text-emerald-700/80 mb-3">
+              Enter the 6-digit code sent to {email}
+            </p>
           </div>
+          <form className="space-y-6" onSubmit={onSubmit}>
+            {/* Messages */}
+            {(success || error) && (
+              <div className={`text-center text-sm mb-4 font-medium ${
+                success ? 'text-emerald-600' : 'text-red-600'
+              }`}>
+                {success ? `✅ ${success}` : `❌ ${error}`}
+              </div>
+            )}
+            
+            <div>
+              {/* Individual OTP Input Boxes */}
+              <div className="flex justify-center space-x-2 sm:space-x-3 mb-4">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength="1"
+                    value={otp[index] || ''}
+                    onChange={(e) => {
+                      const newOtp = otp.split('');
+                      newOtp[index] = e.target.value.replace(/[^0-9]/g, '');
+                      const otpString = newOtp.join('').slice(0, 6);
+                      setOTP(otpString);
+                      
+                      // Auto-focus next input
+                      if (e.target.value && index < 5) {
+                        const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`);
+                        if (nextInput) nextInput.focus();
+                      }
+                      
+                      if (error) setError('');
+                    }}
+                    onKeyDown={(e) => {
+                      // Handle backspace
+                      if (e.key === 'Backspace' && !otp[index] && index > 0) {
+                        const prevInput = document.querySelector(`input[name="otp-${index - 1}"]`);
+                        if (prevInput) prevInput.focus();
+                      }
+                    }}
+                    onPaste={handlePaste}
+                    name={`otp-${index}`}
+                    className="w-12 h-12 sm:w-14 sm:h-14 text-center backdrop-blur-md bg-white/30 border-2 border-white/30 rounded-2xl focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 text-xl font-bold text-emerald-800 transition-all duration-300 shadow-lg"
+                  />
+                ))}
+              </div>
+              
+              {/* Fallback single input for mobile or accessibility */}
+              <input
+                id="otp"
+                name="otp"
+                type="text"
+                value={otp}
+                onChange={handleOTPChange}
+                onPaste={handlePaste}
+                className="md:hidden w-full px-4 py-4 backdrop-blur-md bg-white/30 border border-white/30 placeholder-emerald-600/60 text-emerald-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 text-lg text-center tracking-widest font-mono transition-all duration-300"
+                placeholder="Enter 6-digit code"
+                maxLength="6"
+                autoComplete="one-time-code"
+              />
+            </div>
 
-          <div>
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              {loading ? 'Verifying...' : 'Verify Email'}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={handleResendOTP}
-              disabled={resendLoading || resendCooldown > 0}
-              className="text-sm text-indigo-600 hover:text-indigo-500 disabled:text-gray-400 disabled:cursor-not-allowed"
-            >
-              {resendLoading 
-                ? 'Sending...' 
-                : resendCooldown > 0 
-                  ? `Resend in ${resendCooldown}s`
-                  : 'Resend code'
-              }
+              {loading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Verifying...
+                </>
+              ) : (
+                'Verify Email'
+              )}
             </button>
 
-            <button
-              type="button"
-              onClick={onBackToRegister}
-              className="text-sm text-gray-600 hover:text-gray-500"
-            >
-              Back to registration
-            </button>
-          </div>
-        </form>
+            <div className="flex items-center justify-between pt-3">
+              <button
+                type="button"
+                onClick={handleResendOTP}
+                disabled={resendLoading || resendCooldown > 0}
+                className="px-3 py-2 backdrop-blur-md bg-white/30 border border-white/30 text-emerald-700 rounded-lg font-medium hover:bg-white/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+              >
+                {resendLoading 
+                  ? 'Sending...' 
+                  : resendCooldown > 0 
+                    ? `Resend (${resendCooldown}s)`
+                    : 'Resend'
+                }
+              </button>
 
-        <div className="text-xs text-gray-500 text-center">
-          <p>Check your spam folder if you don't see the email.</p>
-          <p>The verification code will expire in 10 minutes.</p>
+              <button
+                type="button"
+                onClick={onBackToRegister}
+                className="px-3 py-2 backdrop-blur-md bg-white/30 border border-white/30 text-emerald-700 rounded-lg font-medium hover:bg-white/40 transition-all duration-300 text-xs"
+              >
+                ← Back
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

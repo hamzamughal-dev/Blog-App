@@ -89,19 +89,37 @@ const Login = ({ onAuthSuccess }) => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-amber-50 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-100/20 to-transparent"></div>
+      </div>
+      
+      <div className="max-w-md w-full relative z-10 p-4">
+        {/* Glass Morphism Card */}
+        <div className="backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl shadow-2xl p-6">
+          <div className="text-center mb-6">
+            {/* Logo */}
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-green-700 rounded-xl flex items-center justify-center shadow-xl">
+                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                </svg>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-800 to-green-700 bg-clip-text text-transparent mb-2">
+              Welcome Back! 🌱
+            </h2>
+            <p className="text-emerald-700/80 text-sm">
+              Sign in to your AgriBot account
+            </p>
+          </div>
+        <form className="space-y-4" onSubmit={onSubmit}>
           {error && (
-            <div className={`border px-4 py-3 rounded ${
+            <div className={`backdrop-blur-md border px-4 py-3 rounded-xl shadow-lg ${
               needsVerification 
-                ? 'bg-yellow-100 border-yellow-400 text-yellow-700'
-                : 'bg-red-100 border-red-400 text-red-700'
+                ? 'bg-yellow-100/80 border-yellow-400/50 text-yellow-800'
+                : 'bg-red-100/80 border-red-400/50 text-red-800'
             }`}>
               <div className="flex items-center">
                 {needsVerification ? (
@@ -120,7 +138,7 @@ const Login = ({ onAuthSuccess }) => {
                   type="button"
                   onClick={handleVerifyEmail}
                   disabled={loading}
-                  className="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-sm disabled:opacity-50 transition-colors"
+                  className="mt-3 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-sm disabled:opacity-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
                   {loading ? (
                     <div className="flex items-center justify-center">
@@ -134,8 +152,13 @@ const Login = ({ onAuthSuccess }) => {
               )}
             </div>
           )}
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
+          <div className="space-y-4">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
               <input
                 id="email"
                 name="email"
@@ -143,11 +166,16 @@ const Login = ({ onAuthSuccess }) => {
                 required
                 value={email}
                 onChange={onChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="block w-full pl-10 pr-4 py-3 backdrop-blur-md bg-white/30 border border-white/30 rounded-xl placeholder-emerald-600/60 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
                 placeholder="Email address"
               />
             </div>
-            <div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
               <input
                 id="password"
                 name="password"
@@ -155,7 +183,7 @@ const Login = ({ onAuthSuccess }) => {
                 required
                 value={password}
                 onChange={onChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="block w-full pl-10 pr-4 py-3 backdrop-blur-md bg-white/30 border border-white/30 rounded-xl placeholder-emerald-600/60 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
                 placeholder="Password"
               />
             </div>
@@ -165,28 +193,39 @@ const Login = ({ onAuthSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent font-bold rounded-xl text-white bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <div className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </div>
+              ) : (
+                'Sign in 🚀'
+              )}
             </button>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
             <Link
               to="/forgot-password"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-emerald-600 hover:text-emerald-800 transition-colors backdrop-blur-md bg-white/20 px-3 py-2 rounded-lg border border-white/30 hover:bg-white/30 text-sm"
             >
-              Forgot your password?
+              Forgot password?
             </Link>
             
             <Link
               to="/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-emerald-600 hover:text-emerald-800 transition-colors backdrop-blur-md bg-white/20 px-3 py-2 rounded-lg border border-white/30 hover:bg-white/30 text-sm"
             >
               Create account
             </Link>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
